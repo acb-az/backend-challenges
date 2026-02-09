@@ -13,12 +13,12 @@ import java.util.Properties;
 @Component
 public class InquiryProducer {
 
-    // BAD PRACTICE: Hardcoded configuration
+    // YANLIŞ TƏCRÜBƏ: Konfiqurasiya kodun içinə yazılıb (hardcoded)
     private final String BOOTSTRAP_SERVERS = "localhost:9092";
     private final String TOPIC = "approved-inquiries-topic";
 
     public void sendApprovedInquiry(InquiryMessage message) {
-        // BAD PRACTICE: Creating a new producer for every message (Efficiency issue)
+        // YANLIŞ TƏCRÜBƏ: Hər mesaj üçün yeni producer yaradılır (Səmərəlilik problemi)
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -32,9 +32,9 @@ public class InquiryProducer {
             
             ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, message.getInquiryId(), json);
             producer.send(record);
-            // producer.close(); // If they forget to close, it's even worse (leak), but let's be nice and close it or let it leak for the challenge? 
-            // The prompt says "Efficiency: Check usage of KafkaTemplate".
-            // So creating new producer is the inefficiency.
+            // producer.close(); // Bağlanmasa resurs sızması (leak) olacaq.
+            // Tapşırıq: KafkaTemplate istifadəsini yoxlayın.
+            // Hər dəfə yeni producer yaratmaq səmərəsizdir.
             producer.close(); 
         } catch (Exception e) {
             e.printStackTrace();

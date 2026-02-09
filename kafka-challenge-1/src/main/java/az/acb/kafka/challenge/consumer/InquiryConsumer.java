@@ -24,21 +24,17 @@ public class InquiryConsumer {
     private final InquiryProcessorService inquiryProcessorService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // BAD PRACTICE: Hardcoded properties inside the code instead of application.yml
-    // Also manual deserialization inside the listener to provoke errors on bad JSON
+    // YANLIŞ TƏCRÜBƏ: Tənzimləmələr application.yml əvəzinə kodun daxilində yazılıb
+    // Həmçinin pis JSON gəldikdə xəta verməsi üçün manual deserialization edilir
     @KafkaListener(topics = "inquiry-input-topic", groupId = "inquiry-group")
     public void listen(String message) {
         System.out.println("Received message: " + message);
         try {
-            // Manual deserialization
+            // Manual deserialization (Əl ilə obyektə çevirmə)
             InquiryMessage inquiry = objectMapper.readValue(message, InquiryMessage.class);
             inquiryProcessorService.processInquiry(inquiry);
         } catch (Exception e) {
-            // POISON PILL ISSUE:
-            // If we catch it here, it won't crash the consumer loop, but the prompt says:
-            // "Intentionally Bad: Deserialize xətalarını nəzərə alma (məsələn, xarab json gəlsə, proqram çöksün)."
-            // So I should throw the exception or NOT catch it.
-            // If I throw it, the default ErrorHandler might retry forever or stop the container.
+            // POISON PILL (ZƏHƏRLİ MESAJ) PROBLEMİ:
             throw new RuntimeException("Error processing message", e);
         }
     }

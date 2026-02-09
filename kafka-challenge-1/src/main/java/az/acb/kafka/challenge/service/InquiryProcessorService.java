@@ -12,7 +12,7 @@ public class InquiryProcessorService {
     private final InquiryProducer inquiryProducer;
 
     public void processInquiry(InquiryMessage inquiry) {
-        // Business Logic
+        // Biznes Məntiqi
         if ("APPROVED".equalsIgnoreCase(inquiry.getStatus())) {
             System.out.println("Inquiry " + inquiry.getInquiryId() + " is APPROVED. Sending to next topic...");
             inquiryProducer.sendApprovedInquiry(inquiry);

@@ -14,7 +14,7 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 
-    // BAD PRACTICE: Hardcoded configuration
+    // YANLIŞ TƏCRÜBƏ: Konfiqurasiya kodun içinə yazılıb
     private final String BOOTSTRAP_SERVERS = "localhost:9092";
 
     @Bean
